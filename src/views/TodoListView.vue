@@ -1,3 +1,24 @@
+<style>
+.form-control {
+    /* 移除正常狀態下的邊框 */
+    border: none;
+    padding: 0px 2px;
+    font-size: 16px;
+    /* margin: 0; */
+    transition: all .5s;
+}
+
+.form-control:hover {
+    /* 移除滑鼠移入時的邊框 */
+    border: none;
+}
+
+.form-control:focus {
+    /* 移除點擊或選中時的藍色外框和陰影 */
+    border: none;
+    box-shadow: none;
+}
+</style>
 <template>
     <!-- <h1>todolis</h1> -->
     <!-- ToDo List -->
@@ -42,9 +63,9 @@
                                 <label class="todoList_label">
                                     <input class="todoList_input" type="checkbox" :checked="todo.status"
                                         @click.prevent="toggle(todo.id, $event)">
-                                    <span v-if="!todo.isEdit">{{ todo.content }}</span>
-                                    <input v-if="todo.isEdit" type="text" :value="todo.content"
-                                        @blur="updateText(todo.id, $event)" @keyup.enter="updateText(todo.id, $event)"
+                                    <span v-if="!todo.isEdit" class="form-control">{{ todo.content }}</span>
+                                    <input v-if="todo.isEdit" class="form-control" type="text" :value="todo.content"
+                                        @blur="todo.isEdit = false" @keyup.enter="updateText(todo.id, $event)"
                                         @keyup.esc="todo.isEdit = false">
                                 </label>
                                 <a href="#" @click.prevent="todo.isEdit = true">
@@ -60,9 +81,9 @@
                                 <label class="todoList_label">
                                     <input class="todoList_input" type="checkbox" :checked="todo.status"
                                         @click.prevent="toggle(todo.id, $event)">
-                                    <span v-if="!todo.isEdit">{{ todo.content }}</span>
-                                    <input v-if="todo.isEdit" type="text" :value="todo.content"
-                                        @blur="updateText(todo.id, $event)" @keyup.enter="updateText(todo.id, $event)"
+                                    <span v-if="!todo.isEdit" class="form-control">{{ todo.content }}</span>
+                                    <input v-if="todo.isEdit" class="form-control" type="text" :value="todo.content"
+                                        @blur="todo.isEdit = false" @keyup.enter="updateText(todo.id, $event)"
                                         @keyup.esc="todo.isEdit = false">
                                 </label>
 
@@ -79,7 +100,7 @@
                                 <label class="todoList_label">
                                     <input class="todoList_input" type="checkbox" :checked="todo.status"
                                         @click.prevent="toggle(todo.id, $event)">
-                                    <span>{{ todo.content }}</span>
+                                    <span class="form-control">{{ todo.content }}</span>
                                 </label>
 
                                 <a href="#" @click.prevent="deleteHandler(todo.id, $event)">
