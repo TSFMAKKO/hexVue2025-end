@@ -1,5 +1,5 @@
 <template>
-    <h1>todolis</h1>
+    <!-- <h1>todolis</h1> -->
     <!-- ToDo List -->
     <div id="todoListPage" class="bg-half">
         <nav>
@@ -186,13 +186,13 @@ const checkOnline = async () => {
 
         console.log(res.data);
         userData.value = res.data;
-        alert(`${res.data.nickname} 在線上`);
+        // alert(`${res.data.nickname} 在線上`);
         getAllData();
         isLoading.value = false;
     } catch (error) {
         // 跳到其他頁面
         alert("不再線上 即將踢人");
-        router.push("/");
+        router.push("/login");
         isLoading.value = false;
     }
 };

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>註冊</h2>
+    <!-- <h2>註冊</h2> -->
     <div id="signUpPage" class="bg-yellow">
     <div class="conatiner signUpPage vhContainer">
       <div class="side">
