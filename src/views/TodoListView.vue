@@ -26,7 +26,7 @@
         <nav>
             <h1><a href="#">ONLINE TODO LIST</a></h1>
             <ul>
-                <li class="todo_sm"><a href="#"><span>{{ userData.nickname }}的代辦</span></a></li>
+                <li class="todo_sm"><a href="#"><span>{{ userData?.nickname }}的代辦</span></a></li>
                 <li><a @click="logout" href="#loginPage">登出</a></li>
             </ul>
         </nav>
