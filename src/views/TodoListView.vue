@@ -35,7 +35,7 @@
                 <div class="inputBox">
                     <input type="text" v-model="createText" @keypress.enter="createData" placeholder="請輸入待辦事項">
                     <a href="#" @click.prevent="createData">
-                        <i class="fa fa-plus"></i>
+                        <font-awesome-icon icon="plus" />
                     </a>
                 </div>
                 <div class="todoList_list">
@@ -69,7 +69,7 @@
                                         @keyup.esc="todo.isEdit = false">
                                 </label>
                                 <a href="#" @click.prevent="todo.isEdit = true">
-                                    <i class="fa fa-times">編輯</i>
+                                    <font-awesome-icon icon="pen-to-square" />
                                 </a>
                             </li>
 
@@ -88,7 +88,7 @@
                                 </label>
 
                                 <a href="#" @click.prevent="todo.isEdit = true">
-                                    <i class="fa fa-times">編輯</i>
+                                    <font-awesome-icon icon="pen-to-square" />
                                 </a>
                             </li>
 
@@ -104,7 +104,7 @@
                                 </label>
 
                                 <a href="#" @click.prevent="deleteHandler(todo.id, $event)">
-                                    <i class="fa fa-times">刪除</i>
+                                    <font-awesome-icon icon="times" />
                                 </a>
                             </li>
 
