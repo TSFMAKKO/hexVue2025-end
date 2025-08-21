@@ -62,7 +62,7 @@ const handleSignUp = () => {
   error.value = '';
 
   // 驗證表單
-  if (!email.value || !name.value || !password.value || !confirmPassword.value) {
+  if (!email.value || !nickname.value || !password.value || !confirmPassword.value) {
     error.value = '請填寫所有欄位';
     return;
   }
@@ -81,7 +81,7 @@ const handleSignUp = () => {
   // 模擬註冊成功
   console.log('註冊資訊:', {
     email: email.value,
-    name: name.value,
+    name: nickname.value,
     password: password.value
   });
 

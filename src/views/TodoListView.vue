@@ -5,7 +5,7 @@
         <nav>
             <h1><a href="#">ONLINE TODO LIST</a></h1>
             <ul>
-                <li class="todo_sm"><a href="#"><span>{{userData.nickname}}的代辦</span></a></li>
+                <li class="todo_sm"><a href="#"><span>{{ userData.nickname }}的代辦</span></a></li>
                 <li><a @click="logout" href="#loginPage">登出</a></li>
             </ul>
         </nav>
@@ -19,9 +19,12 @@
                 </div>
                 <div class="todoList_list">
                     <ul class="todoList_tab">
-                        <li><a href="#" @click.prevent="status = 'all'" :class="{ active: status === 'all' }">全部</a></li>
-                        <li><a href="#" @click.prevent="status = 'uncompleted'" :class="{ active: status === 'uncompleted' }">待完成</a></li>
-                        <li><a href="#" @click.prevent="status = 'completed'" :class="{ active: status === 'completed' }">已完成</a></li>
+                        <li><a href="#" @click.prevent="status = 'all'" :class="{ active: status === 'all' }">全部</a>
+                        </li>
+                        <li><a href="#" @click.prevent="status = 'uncompleted'"
+                                :class="{ active: status === 'uncompleted' }">待完成</a></li>
+                        <li><a href="#" @click.prevent="status = 'completed'"
+                                :class="{ active: status === 'completed' }">已完成</a></li>
                     </ul>
                     <div class="todoList_items">
                         <ul v-if="status === 'all'" class="todoList_item">
@@ -39,10 +42,13 @@
                                 <label class="todoList_label">
                                     <input class="todoList_input" type="checkbox" :checked="todo.status"
                                         @click.prevent="toggle(todo.id, $event)">
-                                    <span>{{ todo.content }}</span>
+                                    <span v-if="!todo.isEdit">{{ todo.content }}</span>
+                                    <input v-if="todo.isEdit" type="text" :value="todo.content"
+                                        @blur="updateText(todo.id, $event)" @keyup.enter="updateText(todo.id, $event)"
+                                        @keyup.esc="todo.isEdit = false">
                                 </label>
-                                <a href="#">
-                                    <i class="fa fa-times"></i>
+                                <a href="#" @click.prevent="todo.isEdit = true">
+                                    <i class="fa fa-times">編輯</i>
                                 </a>
                             </li>
 
@@ -54,10 +60,14 @@
                                 <label class="todoList_label">
                                     <input class="todoList_input" type="checkbox" :checked="todo.status"
                                         @click.prevent="toggle(todo.id, $event)">
-                                    <span>{{ todo.content }}</span>
+                                    <span v-if="!todo.isEdit">{{ todo.content }}</span>
+                                    <input v-if="todo.isEdit" type="text" :value="todo.content"
+                                        @blur="updateText(todo.id, $event)" @keyup.enter="updateText(todo.id, $event)"
+                                        @keyup.esc="todo.isEdit = false">
                                 </label>
-                                <a href="#">
-                                    <i class="fa fa-times"></i>
+
+                                <a href="#" @click.prevent="todo.isEdit = true">
+                                    <i class="fa fa-times">編輯</i>
                                 </a>
                             </li>
 
@@ -71,8 +81,9 @@
                                         @click.prevent="toggle(todo.id, $event)">
                                     <span>{{ todo.content }}</span>
                                 </label>
-                                <a href="#">
-                                    <i class="fa fa-times"></i>
+
+                                <a href="#" @click.prevent="deleteHandler(todo.id, $event)">
+                                    <i class="fa fa-times">刪除</i>
                                 </a>
                             </li>
 
@@ -83,7 +94,7 @@
                         </div>
                     </div>
 
-           
+
                 </div>
             </div>
         </div>
@@ -111,10 +122,10 @@ const completedWork = computed(() => {
     return todos.value.filter(todo => todo.status === true).length;
 });
 
-const todosComleted=computed(() => {
+const todosComleted = computed(() => {
     return todos.value.filter(todo => todo.status === true);
 })
-const todosUncomleted=computed(() => {
+const todosUncomleted = computed(() => {
     return todos.value.filter(todo => todo.status === false);
 })
 
