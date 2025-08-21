@@ -37,7 +37,7 @@
                             <!--  -->
                             <li v-for="todo in todos">
                                 <label class="todoList_label">
-                                    <input class="todoList_input" type="checkbox" v-model="todo.status" @change="toggle(todo.id, $event)">
+                                    <input class="todoList_input" type="checkbox" :checked="todo.status" @click.prevent="toggle(todo.id, $event)">
                                     <span>{{ todo.content }}</span>
                                 </label>
                                 <a href="#">
@@ -155,6 +155,7 @@ const checkOnline = async () => {
     }
 };
 
+checkOnline()
 // // {
 //   "status": true,
 //   "data": [
@@ -190,6 +191,7 @@ const getAllData = async () => {
 };
 
 // getAllData()
+
 // /todos/{id}/toggle
 const toggle = async (id, event) => {
     console.log("id:", id);
