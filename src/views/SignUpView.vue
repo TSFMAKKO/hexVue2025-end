@@ -1,6 +1,7 @@
 <template>
-  <h2>註冊</h2>
-  <div id="signUpPage" class="bg-yellow">
+  <div>
+    <h2>註冊</h2>
+    <div id="signUpPage" class="bg-yellow">
     <div class="conatiner signUpPage vhContainer">
       <div class="side">
         <a href="#">
@@ -34,6 +35,7 @@
 
           <router-link to="/login" class="formControls_btnLink">登入</router-link>
         </form>
+      </div>
       </div>
     </div>
   </div>

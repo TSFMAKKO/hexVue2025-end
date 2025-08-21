@@ -1,4 +1,5 @@
 <template>
+  <div>
     <h2>登入</h2>
     <!-- login_page -->
     <div id="loginPage" class="bg-yellow">
@@ -32,8 +33,7 @@
             </div>
         </div>
     </div>
-
-
+  </div>
 </template>
 
 <script setup>

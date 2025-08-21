@@ -19,13 +19,13 @@
                 </div>
                 <div class="todoList_list">
                     <ul class="todoList_tab">
-                        <li><a href="#" class="active">全部</a></li>
-                        <li><a href="#">待完成</a></li>
-                        <li><a href="#">已完成</a></li>
+                        <li><a href="#" @click.prevent="status = 'all'" :class="{ active: status === 'all' }">全部</a></li>
+                        <li><a href="#" @click.prevent="status = 'uncompleted'" :class="{ active: status === 'uncompleted' }">待完成</a></li>
+                        <li><a href="#" @click.prevent="status = 'completed'" :class="{ active: status === 'completed' }">已完成</a></li>
                     </ul>
                     <div class="todoList_items">
-                        <ul class="todoList_item">
-                            <li>
+                        <ul v-if="status === 'all'" class="todoList_item">
+                            <!-- <li>
                                 <label class="todoList_label">
                                     <input class="todoList_input" type="checkbox" value="true">
                                     <span>把冰箱發霉的檸檬拿去丟</span>
@@ -33,24 +33,57 @@
                                 <a href="#">
                                     <i class="fa fa-times"></i>
                                 </a>
-                            </li>
+                            </li> -->
                             <!--  -->
                             <li v-for="todo in todos">
                                 <label class="todoList_label">
-                                    <input class="todoList_input" type="checkbox" :checked="todo.status" @click.prevent="toggle(todo.id, $event)">
+                                    <input class="todoList_input" type="checkbox" :checked="todo.status"
+                                        @click.prevent="toggle(todo.id, $event)">
                                     <span>{{ todo.content }}</span>
                                 </label>
                                 <a href="#">
                                     <i class="fa fa-times"></i>
                                 </a>
                             </li>
-                          
+
+                        </ul>
+
+                        <ul v-if="status === 'uncompleted'" class="todoList_item">
+                            <!-- <h2>未完成</h2> -->
+                            <li v-for="todo in todosUncomleted">
+                                <label class="todoList_label">
+                                    <input class="todoList_input" type="checkbox" :checked="todo.status"
+                                        @click.prevent="toggle(todo.id, $event)">
+                                    <span>{{ todo.content }}</span>
+                                </label>
+                                <a href="#">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </li>
+
+                        </ul>
+
+                        <ul v-if="status === 'completed'" class="todoList_item">
+                            <!-- <h2>已完成</h2> -->
+                            <li v-for="todo in todosComleted">
+                                <label class="todoList_label">
+                                    <input class="todoList_input" type="checkbox" :checked="todo.status"
+                                        @click.prevent="toggle(todo.id, $event)">
+                                    <span>{{ todo.content }}</span>
+                                </label>
+                                <a href="#">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </li>
+
                         </ul>
                         <!--  -->
                         <div class="todoList_statistics">
-                            <p> 5 個已完成項目</p>
+                            <p> {{ completedWork }} 個已完成項目</p>
                         </div>
                     </div>
+
+           
                 </div>
             </div>
         </div>
@@ -59,7 +92,7 @@
 
 <script setup>
 import axios from "axios";
-import { ref, provide, computed } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 
 // import Loading from "../components/isLoading2View.vue";
@@ -73,8 +106,17 @@ const baseApiUrl = "https://todolist-api.hexschool.io";
 const todos = ref([]);
 const userData = ref(null);
 const createText = ref('');
+const status = ref('all');
+const completedWork = computed(() => {
+    return todos.value.filter(todo => todo.status === true).length;
+});
 
-
+const todosComleted=computed(() => {
+    return todos.value.filter(todo => todo.status === true);
+})
+const todosUncomleted=computed(() => {
+    return todos.value.filter(todo => todo.status === false);
+})
 
 const logout = async () => {
     console.log("logout");
