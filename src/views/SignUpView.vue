@@ -153,4 +153,5 @@ const register = () => {
   margin: 0.5rem 0;
   text-align: center;
 }
+
 </style>
