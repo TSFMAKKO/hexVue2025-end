@@ -5,15 +5,15 @@
         <nav>
             <h1><a href="#">ONLINE TODO LIST</a></h1>
             <ul>
-                <li class="todo_sm"><a href="#"><span>王小明的代辦</span></a></li>
-                <li><a href="#loginPage">登出</a></li>
+                <li class="todo_sm"><a href="#"><span>{{userData.nickname}}的代辦</span></a></li>
+                <li><a @click="logout" href="#loginPage">登出</a></li>
             </ul>
         </nav>
         <div class="conatiner todoListPage vhContainer">
             <div class="todoList_Content">
                 <div class="inputBox">
-                    <input type="text" placeholder="請輸入待辦事項">
-                    <a href="#">
+                    <input type="text" v-model="createText" @keypress.enter="createData" placeholder="請輸入待辦事項">
+                    <a href="#" @click.prevent="createData">
                         <i class="fa fa-plus"></i>
                     </a>
                 </div>
