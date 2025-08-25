@@ -69,15 +69,35 @@ const baseApiUrl = "https://todolist-api.hexschool.io";
 //     router.push('/todos');
 // };
 
+const validateField = (field, message) => {
+    if (!field.value) {
+        error.value[field.key] = message;
+        return false;
+    }
+    error.value[field.key] = "";
+    return true;
+};
+
+const validateForm = () => {
+    error.value = {}; // 每次檢查前清空錯誤訊息
+    const isEmailValid = validateField({ value: email.value, key: "email" }, "請填寫 email");
+    const isPasswordValid = validateField({ value: password.value, key: "password" }, "請填寫密碼");
+
+    return isEmailValid && isPasswordValid;
+};
+
 const handleLogin = async () => {
     // 簡單的驗證
-    if (!email.value) {
-        error.value.email = '請填寫email';
-        return;
-    }
+    // if (!email.value) {
+    //     error.value.email = '請填寫email';
+    //     return;
+    // }
 
-    if (!password.value) {
-        error.value.password = '請填寫密碼';
+    // if (!password.value) {
+    //     error.value.password = '請填寫密碼';
+    //     return;
+    // }
+    if (!validateForm()) {
         return;
     }
 
@@ -105,7 +125,6 @@ const handleLogin = async () => {
             Date.now() + 3600 * 1000
         ).toUTCString()}; path=/`;
         isLoading.value = false;
-        // router.push("/");
         // 登入成功後跳轉到待辦事項頁面
         router.push('/todos');
 
