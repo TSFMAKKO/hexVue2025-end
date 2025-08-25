@@ -72,6 +72,7 @@
                                     <font-awesome-icon icon="pen-to-square" />
                                 </a>
                             </li>
+                            <li v-if="!isTodos">目前無代辦事項 </li>
 
                         </ul>
 
@@ -136,6 +137,9 @@ const isLoading = ref('');
 // const isLoading = ref('');
 const baseApiUrl = "https://todolist-api.hexschool.io";
 const todos = ref([]);
+const isTodos = computed(() => {
+    return todos.value.length > 0 ? true : false;
+});
 const userData = ref(null);
 const createText = ref('');
 const status = ref('all');

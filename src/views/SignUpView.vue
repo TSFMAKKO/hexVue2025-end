@@ -32,7 +32,6 @@
           <div v-if="error" class="error-message">{{ error }}</div>
 
           <button type="submit" class="formControls_btnSubmit">註冊帳號</button>
-
           <router-link to="/login" class="formControls_btnLink">登入</router-link>
         </form>
       </div>
@@ -48,8 +47,8 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const email = ref('example444@gmail.com');
 // const name = ref('');
-const password = ref('12345678');
-const confirmPassword = ref('12345678');
+const password = ref('example');
+const confirmPassword = ref('example');
 const nickname = ref('example444');
 const error = ref('');
 const isLoading = ref(false);

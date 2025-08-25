@@ -42,7 +42,7 @@ import { useRouter } from 'vue-router';
 import axios from 'axios';
 
 const router = useRouter();
-const email = ref('example333@gmail.com');
+const email = ref('example444@gmail.com');
 const password = ref('example');
 const error = ref('');
 const isLoading = ref('false');
@@ -99,6 +99,7 @@ const handleLogin = async () => {
         router.push('/todos');
 
     } catch (error) {
+        alert(`登入失敗${error.response.data}`);
         console.error("登入失敗:", error);
         isLoading.value = false;
         if (error.response && error.response.data) {
