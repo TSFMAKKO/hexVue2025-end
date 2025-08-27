@@ -2,6 +2,7 @@
     <div>
         <!-- <h2>登入</h2> -->
         <!-- login_page -->
+        
         <div id="loginPage" class="bg-yellow">
             <div class="conatiner loginPage vhContainer">
                 <div class="side">
@@ -35,12 +36,16 @@
             </div>
         </div>
     </div>
+    <isLoadingView />
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref,provide } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+
+import isLoadingView from '../components/isLoading.vue';
+
 
 const router = useRouter();
 const email = ref('example444@gmail.com');
@@ -50,9 +55,11 @@ const error = ref({
     password: '',
     login: ''
 });
-const isLoading = ref('false');
+const isLoading = ref(false);
 const token = ref('');
 const baseApiUrl = "https://todolist-api.hexschool.io";
+
+provide("isLoading", isLoading);
 
 // const handleLogin = () => {
 //     // 簡單的驗證

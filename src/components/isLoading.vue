@@ -133,4 +133,7 @@ import { ref, computed, inject } from 'vue';
 // const data = inject("data");
 const isLoading = inject("isLoading"); // 可以直接讀寫父層提供的 ref
 // const orderCancel = inject("orderCancel");
+console.log("isLoading:", isLoading.value);
+
+// const isLoading=ref(true);
 </script>
