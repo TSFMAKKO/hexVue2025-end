@@ -2,7 +2,7 @@
     <div>
         <!-- <h2>登入</h2> -->
         <!-- login_page -->
-        
+
         <div id="loginPage" class="bg-yellow">
             <div class="conatiner loginPage vhContainer">
                 <div class="side">
@@ -40,15 +40,16 @@
 </template>
 
 <script setup>
-import { ref,provide } from 'vue';
+import { ref, provide } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import Swal from "sweetalert2";
 
 import isLoadingView from '../components/isLoading.vue';
 
 
 const router = useRouter();
-const email = ref('example444@gmail.com');
+const email = ref('example333@gmail.com');
 const password = ref('example');
 const error = ref({
     email: '',
@@ -126,6 +127,27 @@ const handleLogin = async () => {
         token.value = res.data.token;
         console.log(token.value);
         alert(`${res.data.nickname} 登入成功`);
+        Swal.fire({
+            title: `登入成功`,
+            text: `${res.data.nickname} 歡迎回來`,
+            icon: 'success',
+            confirmButtonText: '確定'
+        });
+        // Swal.fire({
+        //     title: '提示訊息',              // 彈窗標題
+        //     text: `${res.data.nickname} 登入成功`, // 彈窗內容
+        //     icon: 'success',                   // 顯示的圖示 (info/success/error/warning/question)
+        // confirmButtonText: '確定',       // 設定後會顯示「確定」按鈕
+        // cancelButtonText: '取消',        // 如果想要有「取消」按鈕，要額外加上這個
+        // showCancelButton: true          // 啟用「取消」按鈕
+        // })
+        // .then((result) => {
+        //     if (result.isConfirmed) {
+        //         console.log('使用者按了確定');
+        //     } else if (result.isDismissed) {
+        //         console.log('使用者按了取消或關閉視窗');
+        // }
+        // });
 
         // 把token存入cookie 並設定日期
         document.cookie = `token=${token.value}; expires=${new Date(
@@ -137,6 +159,12 @@ const handleLogin = async () => {
 
     } catch (e) {
         alert(`登入失敗${e.response.data.message}`);
+        Swal.fire({
+            title: '登入失敗',
+            text: '帳號或密碼錯誤',
+            icon: 'error',
+            confirmButtonText: '重新輸入'
+        });
         console.error("登入失敗:", e);
         isLoading.value = false;
         if (e.response && e.response.data) {

@@ -112,7 +112,7 @@
                         </ul>
                         <!--  -->
                         <div class="todoList_statistics">
-                            <p> {{ completedWork }} 個已完成項目</p>
+                            <p> {{ unCompletedWork }} 個未完成項目</p>
                         </div>
                     </div>
 
@@ -127,6 +127,7 @@
 import axios from "axios";
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import Swal from "sweetalert2";
 
 // import Loading from "../components/isLoading2View.vue";
 
@@ -143,8 +144,8 @@ const isTodos = computed(() => {
 const userData = ref(null);
 const createText = ref('');
 const status = ref('all');
-const completedWork = computed(() => {
-    return todos.value.filter(todo => todo.status === true).length;
+const unCompletedWork = computed(() => {
+    return todos.value.filter(todo => todo.status === false).length;
 });
 
 const todosComleted = computed(() => {
@@ -185,10 +186,22 @@ const logout = async () => {
         // 清空暫存
         token.value = "";
         userData.value = null;
-        alert(`成功登出 ${res.data.message}`);
+        // alert(`成功登出 ${res.data.message}`);
+        Swal.fire({
+            title: '成功登出',
+            //   text: `${res.data.message}`,
+            icon: 'success',
+            confirmButtonText: '確定'
+        });
     } catch (error) {
-        alert(`登出失敗${error.data}`);
+        // alert(`登出失敗${error.data}`);
         console.log("登出失敗", error);
+        Swal.fire({
+            title: '登出失敗',
+            text: `${error.data.message}！`,
+            icon: 'error',
+            confirmButtonText: '確定'
+        });
         // 如果是 401 未授權錯誤，也清除 cookie 並重導向
         // if (error.response && error.response.status === 401) {
         // document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
@@ -227,9 +240,17 @@ const checkOnline = async () => {
         isLoading.value = false;
     } catch (error) {
         // 跳到其他頁面
-        alert("不再線上 即將踢人");
-        router.push("/login");
-        isLoading.value = false;
+        // alert("不再線上 即將踢人");
+        Swal.fire({
+            title: '不再線上 即將踢人',
+            // text: `${error.data.message}！`,
+            icon: 'error',
+            confirmButtonText: '確定'
+        }).then((result) => {
+            router.push("/login");
+            isLoading.value = false;
+        })
+
     }
 };
 
@@ -393,9 +414,44 @@ const createData = async () => {
         todos.value.push(res.data.newTodo);
     }
 };
+const confirmDelete = async (id) => {
+    console.log("id:", id);
+    const data = todos.value.find((todo) => todo.id === id);
+    return Swal.fire({
+        title: "確定要刪除這筆資料嗎？",       // 標題
+        text: `${data.content} 會被刪除`,  // 內文
+        icon: "warning",              // 圖示：警告
+        showCancelButton: true,       // 顯示取消按鈕
+        confirmButtonText: "確定",     // 確定按鈕文字
+        cancelButtonText: "取消"      // 取消按鈕文字
+    })
+
+        .then((result) => {
+            if (result.isConfirmed) {
+                // 使用者按下確定 → 執行刪除成功提示
+                Swal.fire(
+                    "刪除了！",
+                    "資料已經被刪除。",
+                    "success"
+                );
+                return true;
+            } else if (result.isDismissed) {
+                // 使用者按下取消或關閉彈窗
+                Swal.fire(
+                    "取消刪除",
+                    "資料未被刪除",
+                    "info"
+                );
+                return false;
+            }
+        });
+};
+
 
 const deleteHandler = async (id, event) => {
-    if (!confirm("確認刪除")) return;
+    // if (!confirm("確認刪除")) return;
+    if (!(await confirmDelete(id))) return;
+
     console.log("id:", id);
     const api = `${baseApiUrl}/todos/${id}`;
     console.log(api);
