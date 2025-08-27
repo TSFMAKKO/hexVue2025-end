@@ -43,6 +43,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import Swal from "sweetalert2";
 
 const router = useRouter();
 const email = ref('example444@gmail.com');
@@ -132,17 +133,34 @@ const register = () => {
       // alert("註冊成功")
       if (data.status) {
         alert(`註冊成功 ${data.uid}`);
+        Swal.fire({
+            title: `註冊成功`,
+            text: `${data.uid}`,
+            icon: 'success',
+            confirmButtonText: '確定'
+        });
         hasAccount.value = true;
         // 註冊成功後跳轉到登入頁面
         router.push('/login');
       } else {
-        alert(`註冊失敗${data.message}`);
+        // alert(`註冊失敗 ${data.message}`);
+        Swal.fire({
+            title: `註冊失敗`,
+            text: `${data.message}`,
+            icon: 'error',
+            confirmButtonText: '確定'
+        });
       }
       isLoading.value = false;
     })
     .catch((e) => {
       alert(`註冊失敗`);
       isLoading.value = false;
+      Swal.fire({
+            title: `註冊失敗`,
+            icon: 'error',
+            confirmButtonText: '確定'
+        });
     });
 };
 </script>
