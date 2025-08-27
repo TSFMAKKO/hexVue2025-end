@@ -126,13 +126,18 @@ const handleLogin = async () => {
         console.log("res:", res.data);
         token.value = res.data.token;
         console.log(token.value);
-        alert(`${res.data.nickname} 登入成功`);
+        // alert(`${res.data.nickname} 登入成功`);
         Swal.fire({
             title: `登入成功`,
             text: `${res.data.nickname} 歡迎回來`,
             icon: 'success',
             confirmButtonText: '確定'
-        });
+        }).then((result) => {
+
+            // 登入成功後跳轉到待辦事項頁面
+            router.push('/todos');
+        })
+
         // Swal.fire({
         //     title: '提示訊息',              // 彈窗標題
         //     text: `${res.data.nickname} 登入成功`, // 彈窗內容
@@ -154,8 +159,6 @@ const handleLogin = async () => {
             Date.now() + 3600 * 1000
         ).toUTCString()}; path=/`;
         isLoading.value = false;
-        // 登入成功後跳轉到待辦事項頁面
-        router.push('/todos');
 
     } catch (e) {
         alert(`登入失敗${e.response.data.message}`);
