@@ -77,8 +77,6 @@ const handleSignUp = () => {
     return;
   }
 
-  // 這裡應該發送 API 請求進行註冊
-  // 模擬註冊成功
   console.log('註冊資訊:', {
     email: email.value,
     name: nickname.value,
@@ -108,7 +106,6 @@ const register = async () => {
     return;
   }
 
-  // 這裡應該發送 API 請求進行註冊
   console.log("register");
   isLoading.value = true;
   //
@@ -137,12 +134,10 @@ const register = async () => {
         icon: 'success',
         confirmButtonText: '確定'
       }).then((result) => {
-        // 註冊成功後跳轉到登入頁面
         router.push('/login');
       })
 
     } else {
-      // alert(`註冊失敗 ${data.message}`);
       Swal.fire({
         title: `註冊失敗`,
         text: `${data.message}`,

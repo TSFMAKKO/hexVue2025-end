@@ -163,13 +163,11 @@ const logout = async () => {
         console.log("res.data:", res.data);
         // 登出成功後清除 cookie
         document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
-        // router.push("/");
 
         isLoading.value = false;
         // 清空暫存
         token.value = "";
         userData.value = null;
-        // alert(`成功登出 ${res.data.message}`);
         Swal.fire({
             title: '成功登出',
             //   text: `${res.data.message}`,
@@ -178,7 +176,6 @@ const logout = async () => {
         });
 
     } catch (error) {
-        // alert(`登出失敗${error.data}`);
         console.log("登出失敗", error);
         Swal.fire({
             title: '登出失敗',
@@ -215,9 +212,8 @@ const checkOnline = async () => {
         userData.value = res.data;
         getAllData();
 
-        
+
     } catch (error) {
-        // alert("不再線上 即將踢人");
         isLoading.value = false;
         Swal.fire({
             title: '不再線上 即將踢人',
@@ -226,7 +222,6 @@ const checkOnline = async () => {
             confirmButtonText: '確定'
         }).then((result) => {
             router.push("/login");
-            // isLoading.value = false;
         })
 
     }
@@ -299,8 +294,6 @@ const toggle = async (id, event) => {
         const todo = todos.value.find((todo) => todo.id === id);
         todo.status = !todo.status;
 
-        // event.target.checked = status
-
         console.log(res.data);
     } catch (error) {
         // 更新失敗把值回寫
@@ -315,9 +308,7 @@ const toggle = async (id, event) => {
         // event.target.checked = status
     }
 
-    console.log(todos.value);
 
-    // todos.value = res.data.data
 };
 
 // updateText
@@ -365,14 +356,11 @@ const updateText = async (id, event) => {
         // event.target.value = content
     }
 
-    //
-
-    // 退動畫
+ 
     isLoading.value=false;
 
     console.log(todos.value);
 
-    // todos.value = res.data.data
 };
 
 // updateText
@@ -420,14 +408,8 @@ const updateText2 = async (id, newContent) => {
         // event.target.value = content
     }
 
-    //
-
-    // 退動畫
     isLoading.value=false
 
-    console.log(todos.value);
-
-    // todos.value = res.data.data
 };
 
 
@@ -504,10 +486,6 @@ const deleteHandler = async (id, event) => {
             },
         });
 
-        // console.log(event.target.closest(".todo-item"));
-
-        // event.target.closest(".todo-item").classList.add("disable");
-
         // 成功後刪除
         todos.value = todos.value.filter((todo) => {
             if (todo.id != id) {
@@ -519,24 +497,12 @@ const deleteHandler = async (id, event) => {
         console.log(res.data);
 
     } catch (error) {
-        // 更新失敗 不用該改
+        // 更新失敗
     }
-
-    console.log(todos.value);
-
-    // todos.value = res.data.data
 };
 
 provide("createText", createText);
-// provide("createData", createData);
-// status unCompletedWork
 provide("status",status)
 provide("unCompletedWork",unCompletedWork)
-// provide("todos",todos)
 
-// :todosView="todosView"
-// :todos="todos"
-// @toggle="toggle"
-// @updateText="updateText"
-// @deleteHandler="deleteHandler"
 </script>
