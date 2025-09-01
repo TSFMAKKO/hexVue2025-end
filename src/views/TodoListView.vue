@@ -87,16 +87,11 @@
 
                 <hr>
 
-    <!--            :todosView="todosView"
-                    :todos="todos"
-                    @toggle="toggle"
-                    @updateText="updateText"
-                    @deleteHandler="deleteHandler" -->
                 <TodoList
                   :todosView="todosView"
                   :todos="todos"
                   @toggle="toggle"
-                  @updateText="updateText2"
+                  @updateText="updateText"
                   @deleteHandler="deleteHandler"
                  />
 
@@ -191,11 +186,7 @@ const logout = async () => {
             icon: 'error',
             confirmButtonText: '確定'
         });
-        // 如果是 401 未授權錯誤，也清除 cookie 並重導向
-        // if (error.response && error.response.status === 401) {
-        // document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
-        // router.push("/");
-        // }
+        
         isLoading.value = false;
     }
 
@@ -334,6 +325,7 @@ const updateText = async (id, event) => {
     console.log(api);
 
     // 進動畫
+    isLoading.value=true
     try {
         const res = await axios.put(
             api,
@@ -357,7 +349,6 @@ const updateText = async (id, event) => {
                 return todo;
             });
         }
-        // event.target.value = newContent;
         console.log(res.data);
     } catch (error) {
         // 假如更新失敗
@@ -374,6 +365,7 @@ const updateText = async (id, event) => {
     //
 
     // 退動畫
+    isLoading.value=false;
 
     console.log(todos.value);
 
@@ -388,6 +380,7 @@ const updateText2 = async (id, newContent) => {
     console.log(api);
 
     // 進動畫
+    isLoading.value=true
     try {
         const res = await axios.put(
             api,
@@ -411,7 +404,6 @@ const updateText2 = async (id, newContent) => {
                 return todo;
             });
         }
-        // event.target.value = newContent;
         console.log(res.data);
     } catch (error) {
         // 假如更新失敗
@@ -428,6 +420,7 @@ const updateText2 = async (id, newContent) => {
     //
 
     // 退動畫
+    isLoading.value=false
 
     console.log(todos.value);
 
