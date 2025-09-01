@@ -214,8 +214,11 @@ const checkOnline = async () => {
         console.log(res.data);
         userData.value = res.data;
         getAllData();
+
+        
     } catch (error) {
         // alert("不再線上 即將踢人");
+        isLoading.value = false;
         Swal.fire({
             title: '不再線上 即將踢人',
             // text: `${error.data.message}！`,
@@ -223,7 +226,7 @@ const checkOnline = async () => {
             confirmButtonText: '確定'
         }).then((result) => {
             router.push("/login");
-            isLoading.value = false;
+            // isLoading.value = false;
         })
 
     }
