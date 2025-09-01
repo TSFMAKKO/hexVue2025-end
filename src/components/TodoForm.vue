@@ -16,10 +16,6 @@
 <script setup>
 import { inject, ref } from 'vue'
 
-// defineProps({
-//     msg: String,
-// })
-
 const emit = defineEmits({
     createData: Function,
 })

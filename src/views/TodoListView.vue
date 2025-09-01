@@ -32,8 +32,10 @@
         <div class="conatiner todoListPage vhContainer">
             <div class="todoList_Content">
                 <TodoForm @createData="createData" />
-
+              
+                
                 <div class="todoList_list">
+               
                     <ul class="todoList_tab">
                         <li><a href="#" @click.prevent="status = 'all'" :class="{ active: status === 'all' }">全部</a>
                         </li>
@@ -44,6 +46,14 @@
                     </ul>
                     <div class="todoList_items">
                         <ul class="todoList_item">
+                         <TodoItem 
+                            :todosView="todosView"
+                            :todos="todos"
+                            @toggle="toggle"
+                            @updateText="updateText"
+                            @deleteHandler="deleteHandler"
+                        />
+                <!-- <hr>
                             <li v-for="todo in todosView" :key="todo.id">
                                 <label class="todoList_label">
                                     <input class="todoList_input" type="checkbox" :checked="todo.status"
@@ -62,7 +72,7 @@
                                 </a>
 
                             </li>
-                            <li v-if="todos.length === 0">目前無代辦事項 </li>
+                            <li v-if="todos.length === 0">目前無代辦事項 </li> -->
 
                         </ul>
 
@@ -85,7 +95,7 @@ import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
 import Loading from "../components/isLoading.vue";
 import TodoForm from "../components/TodoForm.vue";
-
+import TodoItem from "../components/TodoItem.vue";
 
 const router = useRouter();
 const token = ref('');
@@ -447,4 +457,7 @@ const deleteHandler = async (id, event) => {
 
 provide("createText", createText);
 // provide("createData", createData);
+// status
+provide("status",status)
+// provide("todos",todos)
 </script>
