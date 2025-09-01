@@ -129,7 +129,7 @@
 
 <script setup>
 import axios from "axios";
-import { ref, computed, provide } from "vue";
+import { ref, computed, provide, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
 import Loading from "../components/isLoading.vue";
@@ -215,7 +215,6 @@ const logout = async () => {
     }
 
 };
-
 const checkOnline = async () => {
     console.log("checkOnline");
     isLoading.value = true;
@@ -225,7 +224,6 @@ const checkOnline = async () => {
         console.log("cookies:", cookies);
         //
         token.value = cookies.find((row) => row.trim().startsWith("token=")).split("=")[1];
-        // token.value = token
 
         if (token.value) {
             console.log("token exists:", token.value);
@@ -258,7 +256,15 @@ const checkOnline = async () => {
     }
 };
 
-checkOnline()
+
+onMounted(() => {
+    console.log("TodoListView onMounted");
+    isLoading.value = false;
+    checkOnline()
+});
+
+
+
 // // {
 //   "status": true,
 //   "data": [
@@ -273,7 +279,7 @@ checkOnline()
 
 const getAllData = async () => {
     console.log("token:", token.value);
-
+    isLoading.value = true;
     const res = await axios.get(baseApiUrl + "/todos/", {
         headers: {
             Authorization: `${token.value}`,
@@ -282,21 +288,19 @@ const getAllData = async () => {
 
     console.log(res.data);
     res.data.data.forEach((todo, i) => {
-        // todo.isEdit = false;
         setTimeout(() => {
-            // todo.isEdit = false;
             console.log("todo:", todo)
 
             todos.value.push(todo);
             if (i === res.data.data.length - 1) {
                 isLoading.value = false;
             }
-        }, 200 * i);
+        }, 400 * (i + 1));
     });
-    // todos.value = res.data.data;
+    if (res.data.data.length === 0) {
+        isLoading.value = false;
+    }
 };
-
-// getAllData()
 
 // /todos/{id}/toggle
 const toggle = async (id, event) => {
