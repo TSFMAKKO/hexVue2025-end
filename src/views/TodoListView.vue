@@ -31,16 +31,11 @@
         </nav>
         <div class="conatiner todoListPage vhContainer">
             <div class="todoList_Content">
-                <div class="inputBox">
-                    <input type="text" v-model="createText" @keypress.enter="createData" placeholder="請輸入待辦事項">
-                    <a v-if="createText.trim() !== ''" href="#" @click.prevent="createData">
-                        <font-awesome-icon icon="plus" />
-                    </a>
-                    <a v-else href="#">
-                        <font-awesome-icon icon="ban" />
-                    </a>
-                </div>
+                <TodoForm @createData="createData" />
+              
+                
                 <div class="todoList_list">
+               
                     <ul class="todoList_tab">
                         <li><a href="#" @click.prevent="status = 'all'" :class="{ active: status === 'all' }">全部</a>
                         </li>
@@ -50,7 +45,16 @@
                                 :class="{ active: status === 'completed' }">已完成</a></li>
                     </ul>
                     <div class="todoList_items">
-                        <ul class="todoList_item">
+                         <TodoItem 
+                            :todosView="todosView"
+                            :todos="todos"
+                            @toggle="toggle"
+                            @updateText="updateText"
+                            @deleteHandler="deleteHandler"
+                        />
+                        <!-- <hr> -->
+                        <!-- <ul class="todoList_item">
+                
                             <li v-for="todo in todosView" :key="todo.id">
                                 <label class="todoList_label">
                                     <input class="todoList_input" type="checkbox" :checked="todo.status"
@@ -71,7 +75,7 @@
                             </li>
                             <li v-if="todos.length === 0">目前無代辦事項 </li>
 
-                        </ul>
+                        </ul> -->
 
                         <div class="todoList_statistics">
                             <p> {{ unCompletedWork }} 個未完成項目</p>
@@ -80,6 +84,22 @@
 
 
                 </div>
+
+                <hr>
+
+    <!--            :todosView="todosView"
+                    :todos="todos"
+                    @toggle="toggle"
+                    @updateText="updateText"
+                    @deleteHandler="deleteHandler" -->
+                <TodoList
+                  :todosView="todosView"
+                  :todos="todos"
+                  @toggle="toggle"
+                  @updateText="updateText2"
+                  @deleteHandler="deleteHandler"
+                 />
+
             </div>
         </div>
     </div>
@@ -91,6 +111,9 @@ import { ref, computed, provide, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
 import Loading from "../components/isLoading.vue";
+import TodoForm from "../components/TodoForm.vue";
+import TodoItem from "../components/TodoItem.vue";
+import TodoList from "../components/TodoList.vue";
 
 const router = useRouter();
 const token = ref('');
@@ -104,6 +127,8 @@ const isTodos = computed(() => {
 const userData = ref(null);
 const createText = ref('');
 const status = ref('all');
+
+
 
 const unCompletedWork = computed(() => {
     return todos.value.filter(todo => todo.status === false).length;
@@ -277,14 +302,6 @@ const toggle = async (id, event) => {
         );
 
         // 更新成功
-        // let status = null;
-        // todos.value.map((todo) => {
-        //     if (todo.id === id) {
-        //         todo.status = !todo.status;
-        //         status = todo.status;
-        //     }
-        //     return todo;
-        // });
         const todo = todos.value.find((todo) => todo.id === id);
         todo.status = !todo.status;
 
@@ -340,7 +357,7 @@ const updateText = async (id, event) => {
                 return todo;
             });
         }
-        event.target.value = newContent;
+        // event.target.value = newContent;
         console.log(res.data);
     } catch (error) {
         // 假如更新失敗
@@ -362,6 +379,64 @@ const updateText = async (id, event) => {
 
     // todos.value = res.data.data
 };
+
+// updateText
+const updateText2 = async (id, newContent) => {
+    console.log("updateText", "id:", id, "newContent:",newContent);
+    // const newContent = event.target.value;
+    const api = `${baseApiUrl}/todos/${id}`;
+    console.log(api);
+
+    // 進動畫
+    try {
+        const res = await axios.put(
+            api,
+            {
+                content: newContent,
+            },
+            {
+                headers: {
+                    Authorization: `${token.value}`,
+                },
+            }
+        );
+
+        if (res.status) {
+            // 假如更新成功
+            todos.value.map((todo) => {
+                if (todo.id === id) {
+                    todo.content = newContent;
+                    todo.isEdit = false;
+                }
+                return todo;
+            });
+        }
+        // event.target.value = newContent;
+        console.log(res.data);
+    } catch (error) {
+        // 假如更新失敗
+        // let content = ""
+        // todos.value.forEach(todo => {
+        //     if (todo.id === id) {
+        //         content = todo.content
+        //     }
+        // })
+        // 把值回寫
+        // event.target.value = content
+    }
+
+    //
+
+    // 退動畫
+
+    console.log(todos.value);
+
+    // todos.value = res.data.data
+};
+
+
+
+
 
 const createData = async () => {
     const api = `${baseApiUrl}/todos/`;
@@ -455,4 +530,17 @@ const deleteHandler = async (id, event) => {
 
     // todos.value = res.data.data
 };
+
+provide("createText", createText);
+// provide("createData", createData);
+// status unCompletedWork
+provide("status",status)
+provide("unCompletedWork",unCompletedWork)
+// provide("todos",todos)
+
+// :todosView="todosView"
+// :todos="todos"
+// @toggle="toggle"
+// @updateText="updateText"
+// @deleteHandler="deleteHandler"
 </script>
