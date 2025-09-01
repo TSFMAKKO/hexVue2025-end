@@ -93,7 +93,11 @@
                     @updateText="updateText"
                     @deleteHandler="deleteHandler" -->
                 <TodoList
-                  :unCompletedWork="unCompletedWork"
+                  :todosView="todosView"
+                  :todos="todos"
+                  @toggle="toggle"
+                  @updateText="updateText2"
+                  @deleteHandler="deleteHandler"
                  />
 
             </div>
@@ -353,7 +357,7 @@ const updateText = async (id, event) => {
                 return todo;
             });
         }
-        event.target.value = newContent;
+        // event.target.value = newContent;
         console.log(res.data);
     } catch (error) {
         // 假如更新失敗
@@ -375,6 +379,64 @@ const updateText = async (id, event) => {
 
     // todos.value = res.data.data
 };
+
+// updateText
+const updateText2 = async (id, newContent) => {
+    console.log("updateText", "id:", id, "newContent:",newContent);
+    // const newContent = event.target.value;
+    const api = `${baseApiUrl}/todos/${id}`;
+    console.log(api);
+
+    // 進動畫
+    try {
+        const res = await axios.put(
+            api,
+            {
+                content: newContent,
+            },
+            {
+                headers: {
+                    Authorization: `${token.value}`,
+                },
+            }
+        );
+
+        if (res.status) {
+            // 假如更新成功
+            todos.value.map((todo) => {
+                if (todo.id === id) {
+                    todo.content = newContent;
+                    todo.isEdit = false;
+                }
+                return todo;
+            });
+        }
+        // event.target.value = newContent;
+        console.log(res.data);
+    } catch (error) {
+        // 假如更新失敗
+        // let content = ""
+        // todos.value.forEach(todo => {
+        //     if (todo.id === id) {
+        //         content = todo.content
+        //     }
+        // })
+        // 把值回寫
+        // event.target.value = content
+    }
+
+    //
+
+    // 退動畫
+
+    console.log(todos.value);
+
+    // todos.value = res.data.data
+};
+
+
+
+
 
 const createData = async () => {
     const api = `${baseApiUrl}/todos/`;

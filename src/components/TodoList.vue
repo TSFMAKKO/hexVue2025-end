@@ -12,6 +12,18 @@
 
         <div class="todoList_items">
         <!-- TodoItem -->
+        <!--  :todos="todos"
+            :todosView="todosView"
+            @toggle="toggle"
+            @updateText="updateText"
+            @deleteHandler="deleteHandler"  -->
+        <TodoItem 
+            :todos="todos"
+            :todosView="todosView"
+            @toggle="handleToggle"
+            @updateText="updateText"
+            @deleteHandler="deleteHandler" 
+        />
 
         <!--  -->
             <div class="todoList_statistics">
@@ -23,6 +35,7 @@
 
 <script setup>
 import { inject } from 'vue'
+import TodoItem from "./TodoItem.vue"
 
 const status = inject("status")
 console.log("status:",status);
@@ -30,6 +43,25 @@ console.log("status:",status);
 const unCompletedWork = inject("unCompletedWork")
 console.log("unCompletedWork:",unCompletedWork);
 
+
+const props = defineProps(['todos','todosView'])
+
+const emit = defineEmits(['toggle', 'updateText', 'deleteHandler'])
+
+const handleToggle = (id) => {
+  // 收到孫層 emit 的 id，轉發給父層
+  emit('toggle', id)
+}
+
+const updateText = (id, value) => {
+  // 收到孫層 emit 的 id，轉發給父層
+  emit('updateText', id ,value)
+}
+
+const deleteHandler = (id) => {
+  // 收到孫層 emit 的 id，轉發給父層
+  emit('deleteHandler', id)
+}
 
 // const status = inject("status")
 
