@@ -53,9 +53,11 @@ const handleToggle = (id) => {
   emit('toggle', id)
 }
 
-const updateText = (id, value) => {
+
+const updateText = (id, event) => {
   // 收到孫層 emit 的 id，轉發給父層
-  emit('updateText', id ,value)
+  emit('updateText', id ,event)
+//   emit('updateText', id ,value)
 }
 
 const deleteHandler = (id) => {

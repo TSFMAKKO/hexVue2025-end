@@ -44,6 +44,7 @@ const toggleHandler = (id, event) => {
 const updateTextHandler = (id, event) => {
   console.log("孫層id:",id ,"value:", event.target.value);
   emit('updateText', id, event.target.value)
+  emit('updateText', id, event)
 }
 
 const deleteHandler = (id, event) => {
