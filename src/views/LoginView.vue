@@ -59,20 +59,6 @@ const baseApiUrl = "https://todolist-api.hexschool.io";
 
 provide("isLoading", isLoading);
 
-// const handleLogin = () => {
-//     // 簡單的驗證
-//     if (!email.value || !password.value) {
-//         error.value = '請填寫所有欄位';
-//         return;
-//     }
-
-//     // 這裡應該發送 API 請求進行登入驗證
-//     // 模擬登入成功
-//     console.log('登入資訊:', { email: email.value, password: password.value });
-
-//     // 登入成功後跳轉到待辦事項頁面
-//     router.push('/todos');
-// };
 
 const validateField = (field, message) => {
     if (!field.value) {
@@ -96,9 +82,8 @@ const handleLogin = async () => {
         return;
     }
 
-    // 模擬登入成功
+    // 登入資訊
     console.log('登入資訊:', { email: email.value, password: password.value });
-    console.log("login");
     isLoading.value = true;
 
     try {
@@ -110,33 +95,15 @@ const handleLogin = async () => {
         console.log("res:", res.data);
         token.value = res.data.token;
         console.log(token.value);
-        // alert(`${res.data.nickname} 登入成功`);
+        
         Swal.fire({
             title: `登入成功`,
             text: `${res.data.nickname} 歡迎回來`,
             icon: 'success',
             confirmButtonText: '確定'
         }).then((result) => {
-
-            // 登入成功後跳轉到待辦事項頁面
             router.push('/todos');
         })
-
-        // Swal.fire({
-        //     title: '提示訊息',              // 彈窗標題
-        //     text: `${res.data.nickname} 登入成功`, // 彈窗內容
-        //     icon: 'success',                   // 顯示的圖示 (info/success/error/warning/question)
-        // confirmButtonText: '確定',       // 設定後會顯示「確定」按鈕
-        // cancelButtonText: '取消',        // 如果想要有「取消」按鈕，要額外加上這個
-        // showCancelButton: true          // 啟用「取消」按鈕
-        // })
-        // .then((result) => {
-        //     if (result.isConfirmed) {
-        //         console.log('使用者按了確定');
-        //     } else if (result.isDismissed) {
-        //         console.log('使用者按了取消或關閉視窗');
-        // }
-        // });
 
         // 把token存入cookie 並設定日期
         document.cookie = `token=${token.value}; expires=${new Date(
