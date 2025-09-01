@@ -20,9 +20,8 @@
 }
 </style>
 <template>
-    <!-- <h1>todolis</h1> -->
-    <!-- ToDo List -->
     <div id="todoListPage" class="bg-half">
+        <Loading />
         <nav>
             <h1><a href="#">ONLINE TODO LIST</a></h1>
             <ul>
@@ -34,8 +33,11 @@
             <div class="todoList_Content">
                 <div class="inputBox">
                     <input type="text" v-model="createText" @keypress.enter="createData" placeholder="請輸入待辦事項">
-                    <a href="#" @click.prevent="createData">
+                    <a v-if="createText.trim() !== ''" href="#" @click.prevent="createData">
                         <font-awesome-icon icon="plus" />
+                    </a>
+                    <a v-else href="#">
+                        <font-awesome-icon icon="ban" />
                     </a>
                 </div>
                 <div class="todoList_list">
@@ -48,18 +50,8 @@
                                 :class="{ active: status === 'completed' }">已完成</a></li>
                     </ul>
                     <div class="todoList_items">
-                        <ul v-if="status === 'all'" class="todoList_item">
-                            <!-- <li>
-                                <label class="todoList_label">
-                                    <input class="todoList_input" type="checkbox" value="true">
-                                    <span>把冰箱發霉的檸檬拿去丟</span>
-                                </label>
-                                <a href="#">
-                                    <i class="fa fa-times"></i>
-                                </a>
-                            </li> -->
-                            <!--  -->
-                            <li v-for="todo in todos">
+                        <ul class="todoList_item">
+                            <li v-for="todo in todosView" :key="todo.id">
                                 <label class="todoList_label">
                                     <input class="todoList_input" type="checkbox" :checked="todo.status"
                                         @click.prevent="toggle(todo.id, $event)">
@@ -68,49 +60,19 @@
                                         @blur="todo.isEdit = false" @keyup.enter="updateText(todo.id, $event)"
                                         @keyup.esc="todo.isEdit = false">
                                 </label>
-                                <a href="#" @click.prevent="todo.isEdit = true">
-                                    <font-awesome-icon icon="pen-to-square" />
-                                </a>
-                            </li>
-                            <li v-if="!isTodos">目前無代辦事項 </li>
-
-                        </ul>
-
-                        <ul v-if="status === 'uncompleted'" class="todoList_item">
-                            <!-- <h2>未完成</h2> -->
-                            <li v-for="todo in todosUncomleted">
-                                <label class="todoList_label">
-                                    <input class="todoList_input" type="checkbox" :checked="todo.status"
-                                        @click.prevent="toggle(todo.id, $event)">
-                                    <span v-if="!todo.isEdit" class="form-control">{{ todo.content }}</span>
-                                    <input v-if="todo.isEdit" class="form-control" type="text" :value="todo.content"
-                                        @blur="todo.isEdit = false" @keyup.enter="updateText(todo.id, $event)"
-                                        @keyup.esc="todo.isEdit = false">
-                                </label>
-
-                                <a href="#" @click.prevent="todo.isEdit = true">
-                                    <font-awesome-icon icon="pen-to-square" />
-                                </a>
-                            </li>
-
-                        </ul>
-
-                        <ul v-if="status === 'completed'" class="todoList_item">
-                            <!-- <h2>已完成</h2> -->
-                            <li v-for="todo in todosComleted">
-                                <label class="todoList_label">
-                                    <input class="todoList_input" type="checkbox" :checked="todo.status"
-                                        @click.prevent="toggle(todo.id, $event)">
-                                    <span class="form-control">{{ todo.content }}</span>
-                                </label>
-
-                                <a href="#" @click.prevent="deleteHandler(todo.id, $event)">
+                                <a href="#" v-if="status === 'completed'"
+                                    @click.prevent="deleteHandler(todo.id, $event)">
                                     <font-awesome-icon icon="times" />
                                 </a>
+                                <a v-else href="#" @click.prevent="todo.isEdit = true">
+                                    <font-awesome-icon icon="pen-to-square" />
+                                </a>
+
                             </li>
+                            <li v-if="todos.length === 0">目前無代辦事項 </li>
 
                         </ul>
-                        <!--  -->
+
                         <div class="todoList_statistics">
                             <p> {{ unCompletedWork }} 個未完成項目</p>
                         </div>
@@ -125,17 +87,15 @@
 
 <script setup>
 import axios from "axios";
-import { ref, computed } from "vue";
+import { ref, computed, provide, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
-
-// import Loading from "../components/isLoading2View.vue";
+import Loading from "../components/isLoading.vue";
 
 const router = useRouter();
 const token = ref('');
 const isLoading = ref('');
-// const isLoading = ref('');
-// const isLoading = ref('');
+provide("isLoading", isLoading);
 const baseApiUrl = "https://todolist-api.hexschool.io";
 const todos = ref([]);
 const isTodos = computed(() => {
@@ -144,24 +104,27 @@ const isTodos = computed(() => {
 const userData = ref(null);
 const createText = ref('');
 const status = ref('all');
+
 const unCompletedWork = computed(() => {
     return todos.value.filter(todo => todo.status === false).length;
 });
 
-const todosComleted = computed(() => {
-    return todos.value.filter(todo => todo.status === true);
+const todosView = computed(() => {
+    if (status.value === 'all') {
+        return todos.value;
+    } else if (status.value === 'uncompleted') {
+        return todos.value.filter(todo => todo.status === false);
+    } else if (status.value === 'completed') {
+        return todos.value.filter(todo => todo.status === true);
+    }
 })
-const todosUncomleted = computed(() => {
-    return todos.value.filter(todo => todo.status === false);
-})
+
 
 const logout = async () => {
     console.log("logout");
     isLoading.value = true;
     // 檢查cookie有沒有token
-    // const token2 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiItT1hYQzBRZUp2c0U0SmlLVzRMTCIsIm5pY2tuYW1lIjoiZXhhbXBsZSIsImlhdCI6MTc1NTA2OTMyMSwiZXhwIjoxNzU1MzI4NTIxfQ.Gaz47oGmBZKhvNW435EhZHbNWlWCLvT8Qb4IuvQSh5A"
-    try {
-        // 抓不到token也會跳catch
+     try {
         let tokenCookie = document.cookie
             .split(";")
             .find((row) => row.trim().startsWith("token="));
@@ -177,12 +140,12 @@ const logout = async () => {
                 },
             }
         );
-        // console.log(res);
         console.log("res.data:", res.data);
         // 登出成功後清除 cookie
         document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
         // router.push("/");
 
+        isLoading.value = false;
         // 清空暫存
         token.value = "";
         userData.value = null;
@@ -193,6 +156,7 @@ const logout = async () => {
             icon: 'success',
             confirmButtonText: '確定'
         });
+
     } catch (error) {
         // alert(`登出失敗${error.data}`);
         console.log("登出失敗", error);
@@ -207,11 +171,10 @@ const logout = async () => {
         // document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
         // router.push("/");
         // }
+        isLoading.value = false;
     }
 
-    isLoading.value = false;
 };
-
 const checkOnline = async () => {
     console.log("checkOnline");
     isLoading.value = true;
@@ -221,7 +184,6 @@ const checkOnline = async () => {
         console.log("cookies:", cookies);
         //
         token.value = cookies.find((row) => row.trim().startsWith("token=")).split("=")[1];
-        // token.value = token
 
         if (token.value) {
             console.log("token exists:", token.value);
@@ -235,11 +197,8 @@ const checkOnline = async () => {
 
         console.log(res.data);
         userData.value = res.data;
-        // alert(`${res.data.nickname} 在線上`);
         getAllData();
-        isLoading.value = false;
     } catch (error) {
-        // 跳到其他頁面
         // alert("不再線上 即將踢人");
         Swal.fire({
             title: '不再線上 即將踢人',
@@ -254,7 +213,15 @@ const checkOnline = async () => {
     }
 };
 
-checkOnline()
+
+onMounted(() => {
+    console.log("TodoListView onMounted");
+    isLoading.value = false;
+    checkOnline()
+});
+
+
+
 // // {
 //   "status": true,
 //   "data": [
@@ -269,7 +236,7 @@ checkOnline()
 
 const getAllData = async () => {
     console.log("token:", token.value);
-
+    isLoading.value = true;
     const res = await axios.get(baseApiUrl + "/todos/", {
         headers: {
             Authorization: `${token.value}`,
@@ -278,18 +245,19 @@ const getAllData = async () => {
 
     console.log(res.data);
     res.data.data.forEach((todo, i) => {
-        // todo.isEdit = false;
         setTimeout(() => {
-            // todo.isEdit = false;
             console.log("todo:", todo)
 
             todos.value.push(todo);
-        }, 200 * i);
+            if (i === res.data.data.length - 1) {
+                isLoading.value = false;
+            }
+        }, 400 * (i + 1));
     });
-    // todos.value = res.data.data;
+    if (res.data.data.length === 0) {
+        isLoading.value = false;
+    }
 };
-
-// getAllData()
 
 // /todos/{id}/toggle
 const toggle = async (id, event) => {
@@ -309,14 +277,16 @@ const toggle = async (id, event) => {
         );
 
         // 更新成功
-        let status = null;
-        todos.value.map((todo) => {
-            if (todo.id === id) {
-                todo.status = !todo.status;
-                status = todo.status;
-            }
-            return todo;
-        });
+        // let status = null;
+        // todos.value.map((todo) => {
+        //     if (todo.id === id) {
+        //         todo.status = !todo.status;
+        //         status = todo.status;
+        //     }
+        //     return todo;
+        // });
+        const todo = todos.value.find((todo) => todo.id === id);
+        todo.status = !todo.status;
 
         // event.target.checked = status
 

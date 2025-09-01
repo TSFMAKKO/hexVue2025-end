@@ -89,7 +89,7 @@ const handleSignUp = () => {
   router.push('/login');
 };
 
-const register = () => {
+const register = async () => {
   // 重置錯誤訊息
   error.value = '';
 
@@ -108,62 +108,60 @@ const register = () => {
     return;
   }
 
-
   // 這裡應該發送 API 請求進行註冊
   console.log("register");
   isLoading.value = true;
   //
-  fetch(baseApiUrl + "/users/sign_up", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: email.value,
-      password: password.value,
-      nickname: nickname.value,
-    }),
-  })
-    .then((res) => {
-      console.log(res);
-      return res.json();
+  try {
+    const res = await fetch(baseApiUrl + "/users/sign_up", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value,
+        nickname: nickname.value,
+      }),
     })
-    .then((data) => {
-      console.log(data);
-      // alert("註冊成功")
-      if (data.status) {
-        // alert(`註冊成功 ${data.uid}`);
-        Swal.fire({
-          title: `註冊成功`,
-          text: `${data.uid}`,
-          icon: 'success',
-          confirmButtonText: '確定'
-        }).then((result) => {
-          // 註冊成功後跳轉到登入頁面
-          router.push('/login');
-        })
-        // hasAccount.value = true;
 
-      } else {
-        // alert(`註冊失敗 ${data.message}`);
-        Swal.fire({
-          title: `註冊失敗`,
-          text: `${data.message}`,
-          icon: 'error',
-          confirmButtonText: '確定'
-        });
-      }
-      isLoading.value = false;
-    })
-    .catch((e) => {
-      alert(`註冊失敗`);
-      isLoading.value = false;
+    let data = await res.json();
+    console.log(data);
+
+    console.log(data);
+    if (data.status) {
+      // alert(`註冊成功 ${data.uid}`);
+      Swal.fire({
+        title: `註冊成功`,
+        text: `${data.uid}`,
+        icon: 'success',
+        confirmButtonText: '確定'
+      }).then((result) => {
+        // 註冊成功後跳轉到登入頁面
+        router.push('/login');
+      })
+
+    } else {
+      // alert(`註冊失敗 ${data.message}`);
       Swal.fire({
         title: `註冊失敗`,
+        text: `${data.message}`,
         icon: 'error',
         confirmButtonText: '確定'
       });
+    }
+    isLoading.value = false;
+  } catch (e) {
+    alert(`註冊失敗`);
+    isLoading.value = false;
+    Swal.fire({
+      title: `註冊失敗`,
+      icon: 'error',
+      confirmButtonText: '確定'
     });
+  }
+
+
 };
 </script>
 

@@ -1,8 +1,5 @@
 <template>
     <div>
-        <!-- <h2>登入</h2> -->
-        <!-- login_page -->
-
         <div id="loginPage" class="bg-yellow">
             <div class="conatiner loginPage vhContainer">
                 <div class="side">
@@ -95,25 +92,12 @@ const validateForm = () => {
 };
 
 const handleLogin = async () => {
-    // 簡單的驗證
-    // if (!email.value) {
-    //     error.value.email = '請填寫email';
-    //     return;
-    // }
-
-    // if (!password.value) {
-    //     error.value.password = '請填寫密碼';
-    //     return;
-    // }
     if (!validateForm()) {
         return;
     }
 
-
     // 模擬登入成功
     console.log('登入資訊:', { email: email.value, password: password.value });
-
-
     console.log("login");
     isLoading.value = true;
 
@@ -161,21 +145,31 @@ const handleLogin = async () => {
         isLoading.value = false;
 
     } catch (e) {
-        alert(`登入失敗${e.response.data.message}`);
+        if (e.response && e.response.data) {
+            // 如果有錯誤訊息，顯示在畫面上
+            if (Array.isArray(e.response?.data?.message)) {
+                error.value.login = e.response.data.message.join(', ') // 用逗號或其他分隔符串接
+            } else if (typeof e.response?.data?.message === 'string') {
+                error.value.login = e.response.data.message
+            } else {
+                error.value.login = '發生未知錯誤'
+            }
+
+        } else {
+            error.value.login = '登入失敗，請稍後再試';
+        }
+
+
+        alert(`登入失敗${error.value.login}`);
         Swal.fire({
             title: '登入失敗',
-            text: '帳號或密碼錯誤',
+            text: `${error.value.login}`,
             icon: 'error',
             confirmButtonText: '重新輸入'
         });
         console.error("登入失敗:", e);
+
         isLoading.value = false;
-        if (e.response && e.response.data) {
-            // 如果有錯誤訊息，顯示在畫面上
-            error.value.login = e.response.data.message || '登入失敗，請稍後再試';
-        } else {
-            error.value.login = '登入失敗，請稍後再試';
-        }
         return;
     }
 
