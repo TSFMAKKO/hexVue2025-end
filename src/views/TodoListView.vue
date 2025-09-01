@@ -23,6 +23,7 @@
     <!-- <h1>todolis</h1> -->
     <!-- ToDo List -->
     <div id="todoListPage" class="bg-half">
+        <Loading />
         <nav>
             <h1><a href="#">ONLINE TODO LIST</a></h1>
             <ul>
@@ -34,8 +35,11 @@
             <div class="todoList_Content">
                 <div class="inputBox">
                     <input type="text" v-model="createText" @keypress.enter="createData" placeholder="請輸入待辦事項">
-                    <a href="#" @click.prevent="createData">
+                    <a v-if="createText.trim() !== ''" href="#" @click.prevent="createData">
                         <font-awesome-icon icon="plus" />
+                    </a>
+                    <a v-else href="#">
+                        <font-awesome-icon icon="ban" />
                     </a>
                 </div>
                 <div class="todoList_list">
@@ -59,7 +63,7 @@
                                 </a>
                             </li> -->
                             <!--  -->
-                            <li v-for="todo in todos">
+                            <li v-for="todo in todos" :key="todo.id">
                                 <label class="todoList_label">
                                     <input class="todoList_input" type="checkbox" :checked="todo.status"
                                         @click.prevent="toggle(todo.id, $event)">
@@ -78,7 +82,7 @@
 
                         <ul v-if="status === 'uncompleted'" class="todoList_item">
                             <!-- <h2>未完成</h2> -->
-                            <li v-for="todo in todosUncomleted">
+                            <li v-for="todo in todosUncomleted" :key="todo.id">
                                 <label class="todoList_label">
                                     <input class="todoList_input" type="checkbox" :checked="todo.status"
                                         @click.prevent="toggle(todo.id, $event)">
@@ -97,7 +101,7 @@
 
                         <ul v-if="status === 'completed'" class="todoList_item">
                             <!-- <h2>已完成</h2> -->
-                            <li v-for="todo in todosComleted">
+                            <li v-for="todo in todosComleted" :key="todo.id">
                                 <label class="todoList_label">
                                     <input class="todoList_input" type="checkbox" :checked="todo.status"
                                         @click.prevent="toggle(todo.id, $event)">
@@ -125,17 +129,15 @@
 
 <script setup>
 import axios from "axios";
-import { ref, computed } from "vue";
+import { ref, computed, provide } from "vue";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
-
-// import Loading from "../components/isLoading2View.vue";
+import Loading from "../components/isLoading.vue";
 
 const router = useRouter();
 const token = ref('');
 const isLoading = ref('');
-// const isLoading = ref('');
-// const isLoading = ref('');
+provide("isLoading", isLoading);
 const baseApiUrl = "https://todolist-api.hexschool.io";
 const todos = ref([]);
 const isTodos = computed(() => {
@@ -183,6 +185,7 @@ const logout = async () => {
         document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
         // router.push("/");
 
+        isLoading.value = false;
         // 清空暫存
         token.value = "";
         userData.value = null;
@@ -193,6 +196,7 @@ const logout = async () => {
             icon: 'success',
             confirmButtonText: '確定'
         });
+
     } catch (error) {
         // alert(`登出失敗${error.data}`);
         console.log("登出失敗", error);
@@ -207,9 +211,9 @@ const logout = async () => {
         // document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
         // router.push("/");
         // }
+        isLoading.value = false;
     }
 
-    isLoading.value = false;
 };
 
 const checkOnline = async () => {
@@ -237,7 +241,7 @@ const checkOnline = async () => {
         userData.value = res.data;
         // alert(`${res.data.nickname} 在線上`);
         getAllData();
-        isLoading.value = false;
+        // isLoading.value = false;
     } catch (error) {
         // 跳到其他頁面
         // alert("不再線上 即將踢人");
@@ -284,6 +288,9 @@ const getAllData = async () => {
             console.log("todo:", todo)
 
             todos.value.push(todo);
+            if (i === res.data.data.length - 1) {
+                isLoading.value = false;
+            }
         }, 200 * i);
     });
     // todos.value = res.data.data;
@@ -309,14 +316,16 @@ const toggle = async (id, event) => {
         );
 
         // 更新成功
-        let status = null;
-        todos.value.map((todo) => {
-            if (todo.id === id) {
-                todo.status = !todo.status;
-                status = todo.status;
-            }
-            return todo;
-        });
+        // let status = null;
+        // todos.value.map((todo) => {
+        //     if (todo.id === id) {
+        //         todo.status = !todo.status;
+        //         status = todo.status;
+        //     }
+        //     return todo;
+        // });
+        const todo = todos.value.find((todo) => todo.id === id);
+        todo.status = !todo.status;
 
         // event.target.checked = status
 
