@@ -1,4 +1,5 @@
 <template>
+    <ul class="todoList_item">
     <li v-for="todo in todosView" :key="todo.id">
         <label class="todoList_label">
             <input class="todoList_input" type="checkbox" :checked="todo.status"
@@ -15,7 +16,9 @@
         </a>
 
     </li>
-     <li v-if="todos.length === 0">目前無代辦事項 </li>
+    <li v-if="todos.length === 0">目前無代辦事項 </li>     
+    </ul>
+
 </template>
 
 <style>

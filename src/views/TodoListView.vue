@@ -45,7 +45,6 @@
                                 :class="{ active: status === 'completed' }">已完成</a></li>
                     </ul>
                     <div class="todoList_items">
-                        <ul class="todoList_item">
                          <TodoItem 
                             :todosView="todosView"
                             :todos="todos"
@@ -53,7 +52,9 @@
                             @updateText="updateText"
                             @deleteHandler="deleteHandler"
                         />
-                <!-- <hr>
+                        <!-- <hr> -->
+                        <!-- <ul class="todoList_item">
+                
                             <li v-for="todo in todosView" :key="todo.id">
                                 <label class="todoList_label">
                                     <input class="todoList_input" type="checkbox" :checked="todo.status"
@@ -72,9 +73,9 @@
                                 </a>
 
                             </li>
-                            <li v-if="todos.length === 0">目前無代辦事項 </li> -->
+                            <li v-if="todos.length === 0">目前無代辦事項 </li>
 
-                        </ul>
+                        </ul> -->
 
                         <div class="todoList_statistics">
                             <p> {{ unCompletedWork }} 個未完成項目</p>
@@ -83,6 +84,18 @@
 
 
                 </div>
+
+                <hr>
+
+    <!--            :todosView="todosView"
+                    :todos="todos"
+                    @toggle="toggle"
+                    @updateText="updateText"
+                    @deleteHandler="deleteHandler" -->
+                <TodoList
+                  :unCompletedWork="unCompletedWork"
+                 />
+
             </div>
         </div>
     </div>
@@ -96,6 +109,7 @@ import Swal from "sweetalert2";
 import Loading from "../components/isLoading.vue";
 import TodoForm from "../components/TodoForm.vue";
 import TodoItem from "../components/TodoItem.vue";
+import TodoList from "../components/TodoList.vue";
 
 const router = useRouter();
 const token = ref('');
@@ -457,7 +471,14 @@ const deleteHandler = async (id, event) => {
 
 provide("createText", createText);
 // provide("createData", createData);
-// status
+// status unCompletedWork
 provide("status",status)
+provide("unCompletedWork",unCompletedWork)
 // provide("todos",todos)
+
+// :todosView="todosView"
+// :todos="todos"
+// @toggle="toggle"
+// @updateText="updateText"
+// @deleteHandler="deleteHandler"
 </script>
