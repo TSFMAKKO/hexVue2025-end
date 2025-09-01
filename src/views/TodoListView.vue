@@ -31,15 +31,8 @@
         </nav>
         <div class="conatiner todoListPage vhContainer">
             <div class="todoList_Content">
-                <div class="inputBox">
-                    <input type="text" v-model="createText" @keypress.enter="createData" placeholder="請輸入待辦事項">
-                    <a v-if="createText.trim() !== ''" href="#" @click.prevent="createData">
-                        <font-awesome-icon icon="plus" />
-                    </a>
-                    <a v-else href="#">
-                        <font-awesome-icon icon="ban" />
-                    </a>
-                </div>
+                <TodoForm @createData="createData" />
+
                 <div class="todoList_list">
                     <ul class="todoList_tab">
                         <li><a href="#" @click.prevent="status = 'all'" :class="{ active: status === 'all' }">全部</a>
@@ -91,6 +84,8 @@ import { ref, computed, provide, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
 import Loading from "../components/isLoading.vue";
+import TodoForm from "../components/TodoForm.vue";
+
 
 const router = useRouter();
 const token = ref('');
@@ -104,6 +99,8 @@ const isTodos = computed(() => {
 const userData = ref(null);
 const createText = ref('');
 const status = ref('all');
+
+
 
 const unCompletedWork = computed(() => {
     return todos.value.filter(todo => todo.status === false).length;
@@ -277,14 +274,6 @@ const toggle = async (id, event) => {
         );
 
         // 更新成功
-        // let status = null;
-        // todos.value.map((todo) => {
-        //     if (todo.id === id) {
-        //         todo.status = !todo.status;
-        //         status = todo.status;
-        //     }
-        //     return todo;
-        // });
         const todo = todos.value.find((todo) => todo.id === id);
         todo.status = !todo.status;
 
@@ -455,4 +444,7 @@ const deleteHandler = async (id, event) => {
 
     // todos.value = res.data.data
 };
+
+provide("createText", createText);
+// provide("createData", createData);
 </script>
