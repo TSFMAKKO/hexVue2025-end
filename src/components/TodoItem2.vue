@@ -6,7 +6,7 @@
             <span v-if="!todo.isEdit" class="form-control">{{ todo.content }}</span>
             <!-- 按 enter 更新文字 -->
             <input v-if="todo.isEdit" class="form-control" type="text" :value="todo.content" @blur="todo.isEdit = false"
-                @keyup.enter="updateTextHandler(todo.id, $event)" @keyup.esc="todo.isEdit = false">
+                @keyup.enter="updateTextHandler(todo.id, $event.target.value)" @keyup.esc="todo.isEdit = false">
         </label>
         <a href="#" v-if="status === 'completed'" @click.prevent="deleteHandler(todo.id, $event)">
             <font-awesome-icon icon="times" />
@@ -34,10 +34,9 @@ const toggleHandler = (id, event) => {
   emit('toggle', id, event)
 }
 
-const updateTextHandler = (id, event) => {
-  console.log("孫層id:",id ,"value:", event.target.value);
-  emit('updateText', id, event.target.value)
-  emit('updateText', id, event)
+const updateTextHandler = (id, value) => {
+  console.log("孫層id:",id ,"value:", value);
+  emit('updateText', id, value)
 }
 
 const deleteHandler = (id, event) => {
