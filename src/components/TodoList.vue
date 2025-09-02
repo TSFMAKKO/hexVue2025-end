@@ -11,21 +11,28 @@
     </ul>
 
         <div class="todoList_items">
-        <!-- TodoItem -->
-        <!--  :todos="todos"
-            :todosView="todosView"
-            @toggle="toggle"
-            @updateText="updateText"
-            @deleteHandler="deleteHandler"  -->
-        <TodoItem 
-            :todos="todos"
-            :todosView="todosView"
+        <ul class="todoList_item">
+              <!-- <TodoItem
+                :todosView="todosView"
+                @toggle="handleToggle"
+                @updateText="updateText"
+                @deleteHandler="deleteHandler" 
+            /> -->
+            <li v-if="todos.length === 0">目前無代辦事項 </li>
+
+            <!-- <hr> -->
+            <TodoItem2 
+            v-for="todo in todosView"
+            :todo="todo"
+            :key="todo.id"
             @toggle="handleToggle"
             @updateText="updateText"
             @deleteHandler="deleteHandler" 
-        />
+            />
+        </ul>
+       
 
-        <!--  -->
+           <!--  -->
             <div class="todoList_statistics">
                 <p> {{ unCompletedWork }} 個未完成項目</p>
             </div>
@@ -35,7 +42,9 @@
 
 <script setup>
 import { inject } from 'vue'
-import TodoItem from "./TodoItem.vue"
+// import TodoItem from "./TodoItem.vue"
+import TodoItem2 from "./TodoItem2.vue"
+
 
 const status = inject("status")
 console.log("status:",status);
@@ -64,10 +73,4 @@ const deleteHandler = (id) => {
   // 收到孫層 emit 的 id，轉發給父層
   emit('deleteHandler', id)
 }
-
-// const status = inject("status")
-
-// const props = defineProps(['unCompletedWork'])
-
-// const emit = defineEmits(['toggle', 'updateText', 'deleteHandler'])
 </script>
