@@ -1,6 +1,5 @@
 <template>
-    <!-- <ul class="todoList_item"> -->
-    <li v-for="todo in todosView" :key="todo.id">
+    <li>
         <label class="todoList_label">
             <input class="todoList_input" type="checkbox" :checked="todo.status"
                 @click.prevent="toggleHandler(todo.id, $event)">
@@ -18,12 +17,7 @@
         </a>
 
     </li>
-
 </template>
-
-<style>
-
-</style>
 
 <script setup>
 import { inject } from 'vue'
@@ -31,9 +25,10 @@ const isLoading = inject("isLoading");
 // status
 const status = inject("status")
 
-const props = defineProps(['todosView'])
+const props = defineProps(['todo'])
 
 const emit = defineEmits(['toggle', 'updateText', 'deleteHandler'])
+
 
 const toggleHandler = (id, event) => {
   emit('toggle', id, event)

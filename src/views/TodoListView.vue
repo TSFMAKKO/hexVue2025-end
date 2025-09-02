@@ -32,61 +32,6 @@
         <div class="conatiner todoListPage vhContainer">
             <div class="todoList_Content">
                 <TodoForm @createData="createData" />
-              
-                
-                <div class="todoList_list">
-               
-                    <ul class="todoList_tab">
-                        <li><a href="#" @click.prevent="status = 'all'" :class="{ active: status === 'all' }">全部</a>
-                        </li>
-                        <li><a href="#" @click.prevent="status = 'uncompleted'"
-                                :class="{ active: status === 'uncompleted' }">待完成</a></li>
-                        <li><a href="#" @click.prevent="status = 'completed'"
-                                :class="{ active: status === 'completed' }">已完成</a></li>
-                    </ul>
-                    <div class="todoList_items">
-                         <TodoItem 
-                            :todosView="todosView"
-                            :todos="todos"
-                            @toggle="toggle"
-                            @updateText="updateText"
-                            @deleteHandler="deleteHandler"
-                        />
-                        <!-- <hr> -->
-                        <!-- <ul class="todoList_item">
-                
-                            <li v-for="todo in todosView" :key="todo.id">
-                                <label class="todoList_label">
-                                    <input class="todoList_input" type="checkbox" :checked="todo.status"
-                                        @click.prevent="toggle(todo.id, $event)">
-                                    <span v-if="!todo.isEdit" class="form-control">{{ todo.content }}</span>
-                                    <input v-if="todo.isEdit" class="form-control" type="text" :value="todo.content"
-                                        @blur="todo.isEdit = false" @keyup.enter="updateText(todo.id, $event)"
-                                        @keyup.esc="todo.isEdit = false">
-                                </label>
-                                <a href="#" v-if="status === 'completed'"
-                                    @click.prevent="deleteHandler(todo.id, $event)">
-                                    <font-awesome-icon icon="times" />
-                                </a>
-                                <a v-else href="#" @click.prevent="todo.isEdit = true">
-                                    <font-awesome-icon icon="pen-to-square" />
-                                </a>
-
-                            </li>
-                            <li v-if="todos.length === 0">目前無代辦事項 </li>
-
-                        </ul> -->
-
-                        <div class="todoList_statistics">
-                            <p> {{ unCompletedWork }} 個未完成項目</p>
-                        </div>
-                    </div>
-
-
-                </div>
-
-                <hr>
-
                 <TodoList
                   :todosView="todosView"
                   :todos="todos"
