@@ -256,60 +256,9 @@ const toggle = async (id, event) => {
 
 };
 
-// updateText
-const updateText = async (id, event) => {
-    console.log("updateText", "id:", id);
-    const newContent = event.target.value;
-    const api = `${baseApiUrl}/todos/${id}`;
-    console.log(api);
-
-    // 進動畫
-    isLoading.value=true
-    try {
-        const res = await axios.put(
-            api,
-            {
-                content: newContent,
-            },
-            {
-                headers: {
-                    Authorization: `${token.value}`,
-                },
-            }
-        );
-
-        if (res.status) {
-            // 假如更新成功
-            todos.value.map((todo) => {
-                if (todo.id === id) {
-                    todo.content = newContent;
-                    todo.isEdit = false;
-                }
-                return todo;
-            });
-        }
-        console.log(res.data);
-    } catch (error) {
-        // 假如更新失敗
-        // let content = ""
-        // todos.value.forEach(todo => {
-        //     if (todo.id === id) {
-        //         content = todo.content
-        //     }
-        // })
-        // 把值回寫
-        // event.target.value = content
-    }
-
- 
-    isLoading.value=false;
-
-    console.log(todos.value);
-
-};
 
 // updateText
-const updateText2 = async (id, newContent) => {
+const updateText = async (id, newContent) => {
     console.log("updateText", "id:", id, "newContent:",newContent);
     // const newContent = event.target.value;
     const api = `${baseApiUrl}/todos/${id}`;
